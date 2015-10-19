@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from genword import generate_word
-from sweetwordutils import parse_args, load_input, write_sweetwords
+from sweetwordutils import (parse_args, load_input, write_sweetwords,
+                            seed_tweaks_count, generate_seeds, generate_tweaks)
 
 ROCKYOU_FULL_FILENAME = 'rockyou-withcount.txt'
 PROBLEM_NUM = 3
@@ -26,7 +27,7 @@ def main():
     sweets = generate_sweetword_sets(num, passwords)
     write_sweetwords(out_filename, sweets)
 
-    print('---- Finished Sweetwords Generator Problem #%s ----' % PROBLEM_NUM)
+    print('---- Finished Sweetwords Generator Problem #%d ----' % PROBLEM_NUM)
 
 
 if __name__ == '__main__':

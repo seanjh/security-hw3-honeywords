@@ -1,17 +1,27 @@
 #!/usr/bin/env python
 
+import random
+from math import sqrt, ceil
 from genword import generate_word
-from sweetwordutils import parse_args, load_input, write_sweetwords
+from sweetwordutils import (parse_args, load_input, write_sweetwords,
+                            seed_tweaks_count, generate_seeds, generate_tweaks)
 
 PROBLEM_NUM = 1
 
 
-def generate_sweetwords(num, password):
-    return [password for i in range(num)]
+def generate_sweetwords(seed_count, tweak_count, password):
+    seeds = generate_seeds(seed_count, password)
+
+    sweetwords = []
+    for seed in seeds:
+        sweetwords += generate_tweaks(tweak_count, seed)
+    random.shuffle(sweetwords)
+    return sweetwords
 
 
 def generate_sweetword_sets(num, passwords):
-    return [generate_sweetwords(num, p.strip()) for p in passwords]
+    count = seed_tweaks_count(num)
+    return [generate_sweetwords(count, count, p.strip()) for p in passwords]
 
 
 def main():
