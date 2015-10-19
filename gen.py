@@ -1,18 +1,67 @@
 #!/usr/bin/env python
 
-import argparse
+import sys
+import csv
+from genword import generate_word
 
-parser = argparse.ArgumentParser(description='Honeyword generation.')
-parser.add_argument('-n', dest='number', type=int, default=9,
-                    help=('total number of sweetwords to '
-                          'generate (inclusive of P)'))
-parser.add_argument('password', nargs='+', type=str, help='true password(s)')
-args = parser.parse_args()
+ROCKYOU_100_FILENAME = 'rockyou-withcount-100.txt'
+ROCKYOU_FULL_FILENAME = 'rockyou-withcount.txt'
+
+
+def generate_sweetwords1(num, password):
+    return [password for i in range(num)]
+
+
+def generate_sweetwords2(num, password):
+    # read rockyou_100
+    # do something
+    # generate sweetwords
+    return [password for i in range(num)]
+
+
+def generate_sweetwords3(num, password):
+    return [password for i in range(num)]
+
+
+def generate_sweetword_sets(num, passwords, sweetfunc):
+    return [sweetfunc(num, p.strip()) for p in passwords]
 
 
 def main():
-    print("Arguments: %s" % (args))
-    print('TODO: everything')
+    try:
+        num = int(sys.argv[1])
+        in_filename = sys.argv[2]
+        out_filename = sys.argv[3]
+    except:
+        print('Error parsing command line arguments')
+        return
+
+    print('---- Sweetwords Generator ----')
+    print('Reading passwords from %s\nWriting %d sweetwords/password to %s' % (
+           in_filename, num, out_filename))
+
+    with open(in_filename, 'r') as infile:
+        passwords = infile.readlines()
+
+    with open(out_filename, 'wb') as outfile:
+        sweet_writer = csv.writer(outfile, delimiter=',', quoting=csv.QUOTE_NONE)
+        sweet1 = generate_sweetword_sets(num, passwords, generate_sweetwords1)
+        for sweetword_set in sweet1:
+            sweet_writer.writerow(sweetword_set)
+        sweet2 = generate_sweetword_sets(num, passwords, generate_sweetwords2)
+        sweet_writer.writerow('')
+        sweet_writer.writerow('')
+
+        for sweetword_set in sweet2:
+            sweet_writer.writerow(sweetword_set)
+        sweet_writer.writerow('')
+        sweet_writer.writerow('')
+
+        sweet3 = generate_sweetword_sets(num, passwords, generate_sweetwords3)
+        for sweetword_set in sweet3:
+            sweet_writer.writerow(sweetword_set)
+
+    print('Finished outputting sweetwords')
 
 
 if __name__ == '__main__':
