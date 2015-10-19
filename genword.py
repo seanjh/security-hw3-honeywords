@@ -101,6 +101,37 @@ def generate_word():
 
     return word
 
+def equal_char_replace(some_str):
+
+    for i in range(len(some_str)):
+        #This is the current character at index i, and the left and right substrings
+        some_str_loc = some_str[i:i+1]
+        some_str_left = some_str[:i]
+        some_str_right = some_str[i+1:]
+
+        #If the letter is any of the ones listed replace with new character with a predefined probability
+        if('A' in some_str_loc):
+            if(random() < 0.20):
+                some_str = some_str_left+str('4')+some_str_right
+        if('a' in some_str_loc):
+            if(random() < 0.10):
+                some_str = some_str_left+str('@')+some_str_right
+        if('o' in some_str_loc):
+            if(random() < 0.60):
+                some_str = some_str_left+str('0')+some_str_right
+        if('e' in some_str_loc):
+            if(random() < 0.30):
+                some_str = some_str_left+str('3')+some_str_right
+        if('l' in some_str_loc):
+            if(random() < 0.25):
+                some_str = some_str_left+str('l')+some_str_right
+        if('s' in some_str_loc):
+            if(random() < 0.25):
+                some_str = some_str_left+str('$')+some_str_right
+        if('T' in some_str_loc):
+            if(random() < 0.15):
+                some_str = some_str_left+str('7')+some_str_right
+    return some_str
 
 def main():
     for i in range(10):
