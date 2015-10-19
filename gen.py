@@ -28,20 +28,16 @@ def generate_sweetword_sets(num, passwords, sweetfunc):
 
 
 def main():
-    try:
-        num = int(sys.argv[1])
-        in_filename = sys.argv[2]
-        out_filename = sys.argv[3]
-    except:
-        print('Error parsing command line arguments')
-        return
+    num = int(sys.argv[1])
+    in_filename = sys.argv[2]
+    out_filename = sys.argv[3]
+
+    with open(in_filename, 'r') as infile:
+        passwords = infile.readlines()
 
     print('---- Sweetwords Generator ----')
     print('Reading passwords from %s\nWriting %d sweetwords/password to %s' % (
            in_filename, num, out_filename))
-
-    with open(in_filename, 'r') as infile:
-        passwords = infile.readlines()
 
     with open(out_filename, 'wb') as outfile:
         sweet_writer = csv.writer(outfile, delimiter=',', quoting=csv.QUOTE_NONE)
@@ -65,4 +61,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except IndexError:
+        print('Error parsing command line arguments, %s' % sys.argv[1:])
+        sys.exit(1)
+    except IOError:
+        print('Error opening input file, %s' % sys.argv[1:])
+        sys.exit(1)
