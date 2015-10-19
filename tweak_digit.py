@@ -1,4 +1,6 @@
 import re
+import random
+import string
 
 def can_digit_tweak(str):
   for c in str:
@@ -6,19 +8,17 @@ def can_digit_tweak(str):
       return True
   return False
 
-
-DIGIT_REGEX = re.compile(r'[0-9]{1}')
+DIGITS = '0123456789'
 def digit_tweak(password):
-    for match in DIGIT_REGEX.finditer(password):
-        print 'Matched %s at %s' % (match.string, match.pos)
-    return password
+    new_password = [c for c in password]
+    for i, c in enumerate(new_password):
+        if c in DIGITS:
+            new_password[i] = DIGITS[random.randrange(len(DIGITS))]
+    return string.join(new_password, '')
 
-# assert can_digit_tweak('hello123'), False
-# assert can_digit_tweak('124'), True
-print digit_tweak('hello123')
-print digit_tweak('1234')
-
-
-def tweak(mystr):
-    if can_digit_tweak(mystr):
-        new_pass = digit_tweak(mystr)
+samples = ['qwerty', 'password1', '123456', 'pass1word']
+for sample in samples:
+    if can_digit_tweak(sample):
+        print('`%s` --> `%s`' % (sample, digit_tweak(sample)))
+    else:
+        print('Cannot digit tweak password `%s`' % sample)
