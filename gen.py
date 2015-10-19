@@ -58,23 +58,6 @@ def main():
         sweet3 = generate_sweetword_sets(num, passwords, generate_sweetwords3)
         write_sweetwords(sweet_writer, sweet3, newlines=0)
 
-        # write_sweetwords(sweet1)
-        # for sweetword_set in sweet1:
-        #     sweet_writer.writerow(sweetword_set)
-
-
-        # sweet_writer.writerow('')
-        # sweet_writer.writerow('')
-
-        # for sweetword_set in sweet2:
-        #     sweet_writer.writerow(sweetword_set)
-        # sweet_writer.writerow('')
-        # sweet_writer.writerow('')
-
-
-        # for sweetword_set in sweet3:
-        #     sweet_writer.writerow(sweetword_set)
-
     print('Finished outputting sweetwords')
 
 
