@@ -27,6 +27,13 @@ def generate_sweetword_sets(num, passwords, sweetfunc):
     return [sweetfunc(num, p.strip()) for p in passwords]
 
 
+def write_sweetwords(csv_writer, sweet_sets, newlines=2):
+    for sweet_set in sweet_sets:
+        csv_writer.writerow(sweet_set)
+    for i in range(newlines):
+        csv_writer.writerow('')
+
+
 def main():
     num = int(sys.argv[1])
     in_filename = sys.argv[2]
@@ -41,21 +48,32 @@ def main():
 
     with open(out_filename, 'wb') as outfile:
         sweet_writer = csv.writer(outfile, delimiter=',', quoting=csv.QUOTE_NONE)
-        sweet1 = generate_sweetword_sets(num, passwords, generate_sweetwords1)
-        for sweetword_set in sweet1:
-            sweet_writer.writerow(sweetword_set)
-        sweet2 = generate_sweetword_sets(num, passwords, generate_sweetwords2)
-        sweet_writer.writerow('')
-        sweet_writer.writerow('')
 
-        for sweetword_set in sweet2:
-            sweet_writer.writerow(sweetword_set)
-        sweet_writer.writerow('')
-        sweet_writer.writerow('')
+        sweet1 = generate_sweetword_sets(num, passwords, generate_sweetwords1)
+        write_sweetwords(sweet_writer, sweet1)
+
+        sweet2 = generate_sweetword_sets(num, passwords, generate_sweetwords2)
+        write_sweetwords(sweet_writer, sweet2)
 
         sweet3 = generate_sweetword_sets(num, passwords, generate_sweetwords3)
-        for sweetword_set in sweet3:
-            sweet_writer.writerow(sweetword_set)
+        write_sweetwords(sweet_writer, sweet3, newlines=0)
+
+        # write_sweetwords(sweet1)
+        # for sweetword_set in sweet1:
+        #     sweet_writer.writerow(sweetword_set)
+
+
+        # sweet_writer.writerow('')
+        # sweet_writer.writerow('')
+
+        # for sweetword_set in sweet2:
+        #     sweet_writer.writerow(sweetword_set)
+        # sweet_writer.writerow('')
+        # sweet_writer.writerow('')
+
+
+        # for sweetword_set in sweet3:
+        #     sweet_writer.writerow(sweetword_set)
 
     print('Finished outputting sweetwords')
 
