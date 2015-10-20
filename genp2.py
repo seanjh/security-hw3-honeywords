@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import string
 from genword import generate_word
 from sweetwordutils import (parse_args, load_input, write_sweetwords,

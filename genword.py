@@ -14,8 +14,18 @@ CONSONANTS = string.join([c for c in string.ascii_lowercase
 # h, j, k, q, w, x, y are rarely doubled
 DOUBLE_CONSONANTS = [c + c for c in CONSONANTS if c not in 'hjkqwxy']
 
+''' These various syllable functions are intended to generate random substrings
+    of characters that follow patterns seen the english language. In essense,
+    these functions attempt to replicate the syllable patterns in written
+    english, in an effort to allow combinations of multiple random syllables and
+    the generation of "wordlike" strings of pseudo-random characters.
 
-# http://www.readingrockets.org/article/six-syllable-types
+    The 6 syllable functions were based on syllable patterns described at
+    ReadingRockets.org.
+        http://www.readingrockets.org/article/six-syllable-types
+'''
+
+
 def closed_syllable():
     return choice(CONSONANTS) + choice(VOWELS) + choice(CONSONANTS)
 
@@ -106,19 +116,23 @@ def generate_word():
 
 
 def tough_nut_length():
+    # Determines a length for a toughnut password from 2-256
+    # The lengths follow a rough guesstimate of the probability for different
+    # length toughnut passwords (i.e., between 10 and 25 is most likely).
     r = random()
     if r < 0.05:
-        return randrange(0, 5)
+        return randrange(2, 5)
     if r < 0.45:
         return randrange(5, 10)
     if r < 0.90:
-        return randrange(10, 40)
+        return randrange(10, 25)
     if r < 0.95:
-        return randrange(40, 100)
-    return randrange(100, MAX_PASSWORD_LENGTH)
+        return randrange(25, 100)
+    return randrange(100, MAX_PASSWORD_LENGTH + 1)
 
 
 def generate_tough_nut():
+    # Tough nut passwords are simply strings populated with random characters
     char_count = tough_nut_length()
     toughie = []
     for i in range(char_count):
@@ -131,6 +145,14 @@ def generate_seed(tough_nut_prob=0.08):
     if r < tough_nut_prob:
         return generate_tough_nut()
     return generate_word()
+
+
+''' The pairs of tweak functions that follow each provide the logic necessary to
+    modify input strings (i.e., passwords) by some predetermined rules. Each
+    tweak approach includes a pair of functions -- one that tests whether the
+    tweak can be applied to the password (can...()) and a second that actually
+    implements the tweaking logic (tweak...()).
+'''
 
 
 def can_equal_char_replace(password):
@@ -187,29 +209,6 @@ def tweak_capitalize(password):
 
         return string.join(new_password, '')
 
-    # # generate a random number from 0 to 1
-    # pick = random()
-    # n = randrange(0, len(password))
-    # # print pick, n
-    # if pick < .3:
-    #     # print "proper"
-    #     return password.title()
-    # elif pick < .5:
-    #     # print "upper"
-    #     return password.upper()
-    # elif pick < .8:
-    #     # print "lower"
-    #     return password.lower()
-    # else:
-    #     s = ''
-    #     for i in range(len(password)):
-    #         j = random()
-    #         if j > .65:
-    #             s += (password[i].upper())
-    #         else:
-    #             s += (password[i].lower())
-    #     return s
-
 
 def can_add_vowel(password):
     countVowels = 0
@@ -246,7 +245,7 @@ def tweak_append(password):
             password += choice(ALL_PASSWORD_CHARS)
     if append_chars == 2:
         if r < 0.60:
-           # recent decades
+            # recent decades
             password += str(randrange(50, 99))
         elif r < 0.90:
             # other 2 digit pairs
@@ -264,12 +263,14 @@ def tweak_append(password):
                 password += '20' + str(randrange(0, 21))
         elif r < 0.90:
             # any 4 random digits
-            password += string.join([choice(string.digits) for i in range(4)], '')
+            password += string.join([choice(string.digits)
+                                     for i in range(4)], '')
         else:
             # any 4 random characters
             password += string.join(sample(ALL_PASSWORD_CHARS, 2), '')
     else:
-        password += string.join([choice(ALL_PASSWORD_CHARS) for i in range(append_chars)], '')
+        password += string.join([choice(ALL_PASSWORD_CHARS)
+                                 for i in range(append_chars)], '')
 
     # "Pluralize" every so often when password ends in a letter
     last_pos = len(password) - 1
@@ -347,15 +348,19 @@ def test_tweak_funcs(password):
     else:
         print('Cannot apply %s to %s' % ('tweak_pluralize', password))
     if can_add_vowel(password):
-        print('tweak_add_vowel: %s-->%s' % (password, tweak_add_vowel(password)))
+        print('tweak_add_vowel: %s-->%s' %
+              (password, tweak_add_vowel(password)))
     else:
         print('Cannot apply %s to %s' % ('tweak_add_vowel', password))
     if can_capitalize(password):
-        print('tweak_capitalize: %s-->%s' % (password, tweak_capitalize(password)))
+        print('tweak_capitalize: %s-->%s' %
+              (password, tweak_capitalize(password)))
     else:
-        print('Cannot apply %s to %s' % ('tweak_capitalize', password))
+        print('Cannot apply %s to %s' %
+              ('tweak_capitalize', password))
     if can_equal_char_replace(password):
-        print('tweak_equal_char_replace: %s-->%s' % (password, tweak_equal_char_replace(password)))
+        print('tweak_equal_char_replace: %s-->%s' %
+              (password, tweak_equal_char_replace(password)))
     else:
         print('Cannot apply %s to %s' % ('tweak_equal_char_replace', password))
     if can_tweak_tail(password):

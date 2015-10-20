@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import string
 import random
@@ -9,52 +9,56 @@ from sweetwordutils import (parse_args, load_input, write_sweetwords,
 ROCKYOU_FULL_FILENAME = 'rockyou-withcount.txt'
 PROBLEM_NUM = 3
 
-#converts rock you db in to tuples
+# Indices for the tuples parsed from each line of the rockyou-withcount file
+USES_INDEX = 0
+PASSWORD_INDEX = 1
+
+
+# converts rock you db in to tuples
 def rock_you_db():
     with open(ROCKYOU_FULL_FILENAME, 'r') as infile:
         rockyou = [tuple(string.split(line)) for line in infile.readlines()]
     return rockyou
 
+
 def db_count(rockyou):
-    num_elements=0
-    for i in rockyou:
-        num_elements+= int(i[0])
+    num_elements = 0
+    for password in rockyou:
+        num_elements += int(password[USES_INDEX])
     return num_elements
 
-def generate_sweetwords(num, password,rockyou,num_elements):
-    sweetwords = [password] #initiate the honeywords with the sweetwords
 
-    while len (sweetwords) < mod_count(num):
+def generate_sweetwords(num, password, rockyou, num_elements):
+    sweetwords = [password]  # initiate the honeywords with the sweetwords
 
-        #generate a new word
-        r = random.randint(0,num_elements)
-        new_word = choose_rockyou(rockyou,r)
+    while len(sweetwords) < mod_count(num):
+
+        # generate a new word
+        r = random.randint(0, num_elements)
+        new_word = choose_rockyou(rockyou, r)
         if new_word not in sweetwords:
-            sweetwords.append(new_word) #add the new word to the list of sweetwords
+            # add the new word to the list of sweetwords
+            sweetwords.append(new_word)
 
-    tweaks = generate_tweaks(num,sweetwords) #sweetwords with sqrt(n)-1 elements+pswd
-<<<<<<< HEAD
-
+    # sweetwords with sqrt(n)-1 elements+password
+    tweaks = generate_tweaks(num, sweetwords)
     random.shuffle(tweaks)
-
-=======
-    
->>>>>>> newbranchDaniel
     return tweaks
 
-#choose a random word from rock
-def choose_rockyou(rockyou,r):
-    sum = 0
-    for i in rockyou:
-        sum+= int(i[0])
-        if(r<=sum):
-            return i[1]
-    return "ERROR"
+
+# Choose a random word from rock
+def choose_rockyou(rockyou, r):
+    total = 0
+    for password in rockyou:
+        total += int(password[USES_INDEX])
+        if(r <= total):
+            return password[PASSWORD_INDEX]
+    raise Exception("ERROR")
 
 
-def generate_sweetword_sets(num, passwords,rockyou,num_elements):
-    return [generate_sweetwords(num, p.strip(),rockyou,num_elements) for p in passwords]
-
+def generate_sweetword_sets(num, passwords, rockyou, num_elements):
+    return [generate_sweetwords(num, p.strip(), rockyou, num_elements)
+            for p in passwords]
 
 
 def main():
@@ -65,12 +69,13 @@ def main():
     print('Reading passwords from %s\nWriting %d sweetwords/password to %s' % (
            in_filename, num, out_filename))
 
-    #converts rock you db in to tuples
+    # converts rock you db in to tuples
     rockyou = rock_you_db()
-    #counts numb of elements in rock you db
+
+    # counts numb of elements in rock you db
     num_elements = db_count(rockyou)
 
-    sweets = generate_sweetword_sets(num, passwords,rockyou,num_elements)
+    sweets = generate_sweetword_sets(num, passwords, rockyou, num_elements)
     write_sweetwords(out_filename, sweets)
 
     print('---- Finished Sweetwords Generator Problem #%d ----' % PROBLEM_NUM)
