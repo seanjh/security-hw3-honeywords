@@ -5,11 +5,6 @@ import random
 from genword import generate_seed, select_tweak_func, tweak_tail
 
 
-def generate_sweetword_sets(num, passwords):
-    count = seed_tweaks_count(num)
-    return [generate_sweetwords(count, count, p.strip()) for p in passwords]
-
-
 def parse_args():
     return int(sys.argv[1]), sys.argv[2], sys.argv[3]
 
@@ -26,7 +21,7 @@ def write_sweetwords(out_filename, sweet_sets):
             sweet_writer.writerow(sweet_set)
 
 
-def seed_tweaks_count(num):
+def mod_count(num):
     return int(math.ceil(math.sqrt(num)))
 
 
@@ -58,7 +53,7 @@ def generate_tweak(seed, tweaks):
 
 
 def generate_tweaks(num, seeds):
-    num_tweaks = seed_tweaks_count(num)
+    num_tweaks = mod_count(num)
     tweaks = list(seeds)
     for seed in seeds:
         for i in range(num_tweaks):

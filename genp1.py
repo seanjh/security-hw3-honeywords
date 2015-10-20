@@ -3,14 +3,14 @@
 import random
 from math import sqrt, ceil
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
-                            seed_tweaks_count, generate_seeds, generate_tweaks,
+                            mod_count, generate_seeds, generate_tweaks,
                             select_tweak_func)
 
 PROBLEM_NUM = 1
 
 
 def generate_sweetwords(num, password):
-    seed_count = seed_tweaks_count(num)
+    seed_count = mod_count(num)
     seeds = generate_seeds(seed_count, password)
 
     sweetwords = generate_tweaks(num, seeds)

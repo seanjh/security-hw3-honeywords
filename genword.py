@@ -5,7 +5,7 @@ import re
 from random import random, randrange, choice, sample
 
 MAX_PASSWORD_LENGTH = 256
-PASSWORD_PUNCTUATION = '!@#$%^&*+-<>?:;'
+PASSWORD_PUNCTUATION = '!@#$%^&*+-?'
 ALL_PASSWORD_CHARS = string.ascii_letters + string.digits + PASSWORD_PUNCTUATION
 VOWELS = 'aeiou'
 LETTERS = string.ascii_lowercase
