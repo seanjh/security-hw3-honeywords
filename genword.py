@@ -2,7 +2,7 @@
 
 import string
 import re
-from random import random, randrange, choice
+from random import random, randrange, choice, sample
 
 MAX_PASSWORD_LENGTH = 256
 PASSWORD_PUNCTUATION = '!@#$%^&*+-<>?:;'
@@ -147,27 +147,21 @@ def tweak_equal_char_replace(password):
 
         # If the letter is any of the ones listed replace with new character
         # with a predefined probability
-        if('A' in password_loc):
-            if(random() < 0.20):
+        if('A' in password_loc or 'a' in password_loc):
+            if(random() < 0.50):
                 password = password_left+str('4')+password_right
-        if('a' in password_loc):
-            if(random() < 0.10):
+            else:
                 password = password_left+str('@')+password_right
-        if('o' in password_loc):
-            if(random() < 0.60):
-                password = password_left+str('0')+password_right
+        if('o' in password_loc or 'O' in password_loc):
+            password = password_left+str('0')+password_right
         if('e' in password_loc):
-            if(random() < 0.30):
-                password = password_left+str('3')+password_right
+            password = password_left+str('3')+password_right
         if('l' in password_loc):
-            if(random() < 0.25):
-                password = password_left+str('l')+password_right
+            password = password_left+str('l')+password_right
         if('s' in password_loc):
-            if(random() < 0.25):
-                password = password_left+str('$')+password_right
+            password = password_left+str('$')+password_right
         if('T' in password_loc):
-            if(random() < 0.15):
-                password = password_left+str('7')+password_right
+            password = password_left+str('7')+password_right
     return password
 
 
@@ -176,28 +170,45 @@ def can_capitalize(password):
 
 
 def tweak_capitalize(password):
-    # generate a random number from 0 to 1
-    pick = random()
-    n = randrange(0, len(password))
-    # print pick, n
-    if pick < .3:
-        # print "proper"
+    r = random()
+    if r < 0.40 and password.title() != password:
         return password.title()
-    elif pick < .5:
-        # print "upper"
-        return password.upper()
-    elif pick < .8:
-        # print "lower"
+    elif r < 0.60 and password.lower() != password:
         return password.lower()
     else:
-        s = ''
-        for i in range(len(password)):
-            j = random()
-            if j > .65:
-                s += (password[i].upper())
-            else:
-                s += (password[i].lower())
-        return s
+        new_password = [c for c in password]
+        letter_indices = [i for i, c in enumerate(password) if c.isalpha()]
+        for i in sample(letter_indices, randrange(len(letter_indices))):
+            c = new_password[i]
+            if c in string.ascii_uppercase:
+                new_password[i] = c.lower()
+            elif c in string.ascii_lowercase:
+                new_password[i] = c.upper()
+
+        return string.join(new_password, '')
+
+    # # generate a random number from 0 to 1
+    # pick = random()
+    # n = randrange(0, len(password))
+    # # print pick, n
+    # if pick < .3:
+    #     # print "proper"
+    #     return password.title()
+    # elif pick < .5:
+    #     # print "upper"
+    #     return password.upper()
+    # elif pick < .8:
+    #     # print "lower"
+    #     return password.lower()
+    # else:
+    #     s = ''
+    #     for i in range(len(password)):
+    #         j = random()
+    #         if j > .65:
+    #             s += (password[i].upper())
+    #         else:
+    #             s += (password[i].lower())
+    #     return s
 
 
 def can_add_vowel(password):
@@ -219,26 +230,60 @@ def tweak_add_vowel(password):
     return s
 
 
-def can_pluralize(password):
-    return any(c.isalpha() for c in password)
+def can_append(password):
+    return True
 
 
-def tweak_pluralize(password):
-    alpha = []
-    numbers = []
-    for i in range(len(password)):
-        if password[(i+1)*-1].isalpha():
-            alpha.append(len(password)+(i+1)*-1)
+def tweak_append(password):
+    # new_password = [c for c in password]
+    r = random()
 
-    if password[alpha[0]] == 's':
-        new_str = password[0:alpha[0]] + password[alpha[0] + 1:len(password)]
+    append_chars = randrange(0, 4)
+    if append_chars == 1:
+        if r < 0.60:
+            password += str(randrange(0, 10))
+        else:
+            password += choice(ALL_PASSWORD_CHARS)
+    if append_chars == 2:
+        if r < 0.60:
+           # recent decades
+            password += str(randrange(50, 99))
+        elif r < 0.90:
+            # other 2 digit pairs
+            password += str(randrange(0, 50))
+        else:
+            # 2 random characters
+            password += string.join(sample(ALL_PASSWORD_CHARS, 2), '')
+    if append_chars == 4:
+        if r < 0.80:
+            # 1950-1999
+            if r < 0.70:
+                password += '19' + str(randrange(50, 100))
+            # 2000 - 2020
+            else:
+                password += '20' + str(randrange(0, 21))
+        elif r < 0.90:
+            # any 4 random digits
+            password += string.join([choice(string.digits) for i in range(4)], '')
+        else:
+            # any 4 random characters
+            password += string.join(sample(ALL_PASSWORD_CHARS, 2), '')
     else:
-        new_str = (password[0:alpha[0]+1] +
-                   's' + password[alpha[0] + 1:len(password)])
-    return new_str
+        password += string.join([choice(ALL_PASSWORD_CHARS) for i in range(append_chars)], '')
+
+    # "Pluralize" every so often when password ends in a letter
+    last_pos = len(password) - 1
+    if r < 0.20 and password[last_pos] != 's':
+        if password[last_pos] in string.ascii_lowercase:
+            password += 's'
+        elif password[last_pos] in string.ascii_uppercase:
+            password += 'S'
+
+    return password
 
 
 def can_digit_tweak(password):
+    # Digit tweak can only be applied when there are digits in password
     return any([True for c in password if c in string.digits])
 
 
@@ -251,6 +296,7 @@ def tweak_digits(password):
 
 
 def can_tweak_tail(password):
+    # The tail tweaking method can always be applied
     return True
 
 
@@ -278,8 +324,8 @@ def select_tweak_func(password):
     funcs = []
     if can_digit_tweak(password):
         funcs.append(tweak_digits)
-    if can_pluralize(password):
-        funcs.append(tweak_pluralize)
+    if can_append(password):
+        funcs.append(tweak_append)
     if can_add_vowel(password):
         funcs.append(tweak_add_vowel)
     if can_capitalize(password):
@@ -288,6 +334,7 @@ def select_tweak_func(password):
         funcs.append(tweak_equal_char_replace)
     assert(len(funcs) > 0)
     return choice(funcs)
+    # return tweak_capitalize
 
 
 def test_tweak_funcs(password):
@@ -295,8 +342,8 @@ def test_tweak_funcs(password):
         print('tweak_digits: %s-->%s' % (password, tweak_digits(password)))
     else:
         print('Cannot apply %s to %s' % ('tweak_digits', password))
-    if can_pluralize(password):
-        print('tweak_pluralize: %s-->%s' % (password, tweak_pluralize(password)))
+    if can_append(password):
+        print('tweak_append: %s-->%s' % (password, tweak_append(password)))
     else:
         print('Cannot apply %s to %s' % ('tweak_pluralize', password))
     if can_add_vowel(password):
