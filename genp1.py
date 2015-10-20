@@ -9,19 +9,17 @@ from sweetwordutils import (parse_args, load_input, write_sweetwords,
 PROBLEM_NUM = 1
 
 
-def generate_sweetwords(seed_count, tweak_count, password):
+def generate_sweetwords(num, password):
+    seed_count = seed_tweaks_count(num)
     seeds = generate_seeds(seed_count, password)
 
-    sweetwords = []
-    for seed in seeds:
-        sweetwords += generate_tweaks(tweak_count, seed)
+    sweetwords = generate_tweaks(num, seeds)
     random.shuffle(sweetwords)
     return sweetwords
 
 
 def generate_sweetword_sets(num, passwords):
-    count = seed_tweaks_count(num)
-    return [generate_sweetwords(count, count, p.strip()) for p in passwords]
+    return [generate_sweetwords(num, p.strip()) for p in passwords]
 
 
 def main():

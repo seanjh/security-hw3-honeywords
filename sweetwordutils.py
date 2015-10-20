@@ -43,19 +43,27 @@ def is_tweak_unique(tweak, other_tweaks):
     return tweak not in other_tweaks
 
 
-def generate_tweaks(num, seed):
+def generate_tweak(seed, tweaks):
     tweak_func = select_tweak_func(seed)
-    tweaks = [seed]
-    for i in range(num - 1):
-        tweak_tries = 0
-        new_tweak = seed
-        while(not is_tweak_unique(new_tweak, tweaks) and tweak_tries < 10):
-            new_tweak = tweak_func(seed)
-            tweak_tries += 1
-        # Fall back on tail tweaking if the selected tweak algorithm cannot
-        # produce a unique tweak after 10 tries
-        while(not is_tweak_unique(new_tweak, tweaks)):
-            new_tweak = tweak_tail(seed)
-        tweaks.append(new_tweak)
+    tweak_tries = 0
+    new_tweak = seed
+    while(not is_tweak_unique(new_tweak, tweaks) and tweak_tries < 10):
+        new_tweak = tweak_func(seed)
+        tweak_tries += 1
+    # Fall back on tail tweaking if the selected tweak algorithm cannot
+    # produce a unique tweak after 10 tries
+    while(not is_tweak_unique(new_tweak, tweaks)):
+        new_tweak = tweak_tail(seed)
+    tweaks.append(new_tweak)
+
+
+def generate_tweaks(num, seeds):
+    num_tweaks = seed_tweaks_count(num)
+    tweaks = list(seeds)
+    for seed in seeds:
+        for i in range(num_tweaks):
+            if len(tweaks) == num:
+                break
+            generate_tweak(seed, tweaks)
     random.shuffle(tweaks)
     return tweaks
