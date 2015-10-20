@@ -23,15 +23,20 @@ def rock_you_db_count(rockyou):
 
 def generate_sweetwords(num, password,rockyou,num_elements):
     sweetwords = [password] #initiate the honeywords with the sweetwords
-    while len (sweetwords) < num:
+    
+    while len (sweetwords) < seed_tweaks_count(num):
+        
         #generate a new word
         r = random.randint(0,num_elements)
         new_word = choose_rockyou(rockyou,r)
         if new_word not in sweetwords: 
             sweetwords.append(new_word) #add the new word to the list of sweetwords
 
-    random.shuffle(sweetwords)
-    return sweetwords
+    tweaks = generate_tweaks(num,sweetwords) #sweetwords with sqrt(n)-1 elements+pswd
+
+    random.shuffle(tweaks)
+    
+    return tweaks
 
 #choose a random word from rock
 def choose_rockyou(rockyou,r):
