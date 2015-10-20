@@ -4,7 +4,7 @@ import string
 import random
 from genword import generate_word
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
-                            seed_tweaks_count, generate_seeds, generate_tweaks)
+                            mod_count, generate_seeds, generate_tweaks)
 
 ROCKYOU_FULL_FILENAME = 'rockyou-withcount.txt'
 PROBLEM_NUM = 3
@@ -23,19 +23,19 @@ def rock_you_db_count(rockyou):
 
 def generate_sweetwords(num, password,rockyou,num_elements):
     sweetwords = [password] #initiate the honeywords with the sweetwords
-    
-    while len (sweetwords) < seed_tweaks_count(num):
-        
+
+    while len (sweetwords) < mod_count(num):
+
         #generate a new word
         r = random.randint(0,num_elements)
         new_word = choose_rockyou(rockyou,r)
-        if new_word not in sweetwords: 
+        if new_word not in sweetwords:
             sweetwords.append(new_word) #add the new word to the list of sweetwords
 
     tweaks = generate_tweaks(num,sweetwords) #sweetwords with sqrt(n)-1 elements+pswd
 
     random.shuffle(tweaks)
-    
+
     return tweaks
 
 #choose a random word from rock
@@ -56,7 +56,7 @@ def generate_sweetword_sets(num, passwords,rockyou,num_elements):
 def main():
     num, in_filename, out_filename = parse_args()
     passwords = load_input(in_filename)
-    
+
     print('---- Sweetwords Generator Problem #%s ----' % PROBLEM_NUM)
     print('Reading passwords from %s\nWriting %d sweetwords/password to %s' % (
            in_filename, num, out_filename))
