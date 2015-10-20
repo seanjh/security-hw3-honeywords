@@ -15,7 +15,7 @@ def rock_you_db():
         rockyou = [tuple(string.split(line)) for line in infile.readlines()]
     return rockyou
 
-def rock_you_db_count(rockyou):
+def db_count(rockyou):
     num_elements=0
     for i in rockyou:
         num_elements+= int(i[0])
@@ -33,8 +33,6 @@ def generate_sweetwords(num, password,rockyou,num_elements):
             sweetwords.append(new_word) #add the new word to the list of sweetwords
 
     tweaks = generate_tweaks(num,sweetwords) #sweetwords with sqrt(n)-1 elements+pswd
-
-    random.shuffle(tweaks)
     
     return tweaks
 
@@ -64,7 +62,7 @@ def main():
     #converts rock you db in to tuples
     rockyou = rock_you_db()
     #counts numb of elements in rock you db
-    num_elements = rock_you_db_count(rockyou)
+    num_elements = db_count(rockyou)
 
     sweets = generate_sweetword_sets(num, passwords,rockyou,num_elements)
     write_sweetwords(out_filename, sweets)
