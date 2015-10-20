@@ -2,7 +2,7 @@ import sys
 import csv
 import math
 import random
-from genword import generate_word
+from genword import generate_seed, select_tweak_func
 
 
 def generate_sweetword_sets(num, passwords):
@@ -21,9 +21,9 @@ def load_input(in_filename):
 
 def write_sweetwords(out_filename, sweet_sets):
     with open(out_filename, 'wb') as outfile:
-        sweet_writer = csv.writer(outfile, delimiter=',', quoting=csv.QUOTE_NONE)
+        sweet_writer = csv.writer(outfile, delimiter=',',
+                                  quoting=csv.QUOTE_NONE, quotechar='')
         for sweet_set in sweet_sets:
-            print('Sweet set: %s' % sweet_set)
             sweet_writer.writerow(sweet_set)
 
 
@@ -35,10 +35,11 @@ def generate_seeds(num, password=None):
     seeds = []
     if password:
         seeds.append(password)
-    seeds += [generate_word() for i in range(num - 1 if password else num)]
+    seeds += [generate_seed() for i in range(num - 1 if password else num)]
     random.shuffle(seeds)
     return seeds
 
 
 def generate_tweaks(num, seed):
-    return [seed for i in range(num)]
+    tweak_func = select_tweak_func(seed)
+    return [tweak_func(seed) for i in range(num)]

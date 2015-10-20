@@ -2,9 +2,9 @@
 
 import random
 from math import sqrt, ceil
-from genword import generate_word
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
-                            seed_tweaks_count, generate_seeds, generate_tweaks)
+                            seed_tweaks_count, generate_seeds, generate_tweaks,
+                            select_tweak_func)
 
 PROBLEM_NUM = 1
 
