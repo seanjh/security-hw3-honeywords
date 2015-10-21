@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 import string
-from genword import generate_word
+from genword import (generate_word, generate_tough_nut)
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
                             mod_count, generate_seeds, generate_tweaks)
 from genp3 import (db_count, generate_sweetwords, choose_rockyou,

@@ -179,7 +179,7 @@ def tweak_equal_char_replace(password):
         if('e' in password_loc):
             password = password_left+str('3')+password_right
         if('l' in password_loc):
-            password = password_left+str('l')+password_right
+            password = password_left+str('1')+password_right
         if('s' in password_loc):
             password = password_left+str('$')+password_right
         if('T' in password_loc):

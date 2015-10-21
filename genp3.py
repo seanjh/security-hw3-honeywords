@@ -2,7 +2,7 @@
 
 import string
 import random
-from genword import generate_word
+from genword import (generate_word,generate_tough_nut)
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
                             mod_count, generate_seeds, generate_tweaks)
 
@@ -34,11 +34,16 @@ def generate_sweetwords(num, password, rockyou, num_elements):
     while len(sweetwords) < mod_count(num):
 
         # generate a new word
-        r = random.randint(0, num_elements)
-        new_word = choose_rockyou(rockyou, r)
-        if new_word not in sweetwords:
-            # add the new word to the list of sweetwords
-            sweetwords.append(new_word)
+        r = random.random()
+        
+        if (r < 0.10):
+            new_word = generate_tough_nut()
+        else:
+            r = random.randint(0, num_elements)
+            new_word = choose_rockyou(rockyou, r)
+            if new_word not in sweetwords:
+                # add the new word to the list of sweetwords
+                sweetwords.append(new_word)
 
     # sweetwords with sqrt(n)-1 elements+password
     tweaks = generate_tweaks(num, sweetwords)
