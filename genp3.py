@@ -2,7 +2,7 @@
 
 import string
 import random
-from genword import (generate_word,generate_tough_nut)
+from genword import generate_word, generate_tough_nut, TOUGH_NUT_PROBABILITY
 from sweetwordutils import (parse_args, load_input, write_sweetwords,
                             mod_count, generate_seeds, generate_tweaks)
 
@@ -28,16 +28,19 @@ def db_count(rockyou):
     return num_elements
 
 
-def generate_sweetwords(num, password, rockyou, num_elements):
+
+def generate_sweetwords(num, password, rockyou, num_elements, random_word_prob=0.0):
     sweetwords = [password]  # initiate the honeywords with the sweetwords
 
     while len(sweetwords) < mod_count(num):
 
         # generate a new word
         r = random.random()
-        
-        if (r < 0.10):
+
+        if (r < TOUGH_NUT_PROBABILITY):
             new_word = generate_tough_nut()
+        if r < random_word_prob:
+            new_word = generate_word()
         else:
             r = random.randint(0, num_elements)
             new_word = choose_rockyou(rockyou, r)
