@@ -4,6 +4,8 @@ import string
 import re
 from random import random, randrange, choice, sample
 
+TOUGH_NUT_PROBABILITY = 0.10
+RANDOM_WORD_PROBABILITY = 0.10
 MAX_PASSWORD_LENGTH = 256
 PASSWORD_PUNCTUATION = '!@#$%^&*+-?'
 ALL_PASSWORD_CHARS = string.ascii_letters + string.digits + PASSWORD_PUNCTUATION
@@ -140,7 +142,7 @@ def generate_tough_nut():
     return string.join(toughie, '')
 
 
-def generate_seed(tough_nut_prob=0.08):
+def generate_seed(tough_nut_prob=TOUGH_NUT_PROBABILITY):
     r = random()
     if r < tough_nut_prob:
         return generate_tough_nut()
