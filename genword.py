@@ -6,6 +6,7 @@ from random import random, randrange, choice, sample
 
 TOUGH_NUT_PROBABILITY = 0.10
 RANDOM_WORD_PROBABILITY = 0.10
+EQUIV_CHAR_REPLACE_PROBABILITY = 0.25
 MAX_PASSWORD_LENGTH = 256
 PASSWORD_PUNCTUATION = '!@#$%^&*+-?'
 ALL_PASSWORD_CHARS = string.ascii_letters + string.digits + PASSWORD_PUNCTUATION
@@ -171,20 +172,26 @@ def tweak_equal_char_replace(password):
 
         # If the letter is any of the ones listed replace with new character
         # with a predefined probability
-        if('A' in password_loc or 'a' in password_loc):
-            if(random() < 0.50):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY and
+           ('A' in password_loc or 'a' in password_loc)):
+            if random() < 0.50:
                 password = password_left+str('4')+password_right
             else:
                 password = password_left+str('@')+password_right
-        if('o' in password_loc or 'O' in password_loc):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY
+           and ('o' in password_loc or 'O' in password_loc)):
             password = password_left+str('0')+password_right
-        if('e' in password_loc):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY
+           and 'e' in password_loc):
             password = password_left+str('3')+password_right
-        if('l' in password_loc):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY
+           and 'l' in password_loc):
             password = password_left+str('1')+password_right
-        if('s' in password_loc):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY
+           and 's' in password_loc):
             password = password_left+str('$')+password_right
-        if('T' in password_loc):
+        if (random() < EQUIV_CHAR_REPLACE_PROBABILITY
+           and 'T' in password_loc):
             password = password_left+str('7')+password_right
     return password
 
@@ -239,7 +246,7 @@ def tweak_append(password):
     # new_password = [c for c in password]
     r = random()
 
-    append_chars = randrange(0, 4)
+    append_chars = randrange(1, 5)
     if append_chars == 1:
         if r < 0.60:
             password += str(randrange(0, 10))
@@ -248,7 +255,7 @@ def tweak_append(password):
     if append_chars == 2:
         if r < 0.60:
             # recent decades
-            password += str(randrange(50, 99))
+            password += str(randrange(50, 100))
         elif r < 0.90:
             # other 2 digit pairs
             password += str(randrange(0, 50))
