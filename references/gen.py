@@ -273,4 +273,6 @@ def main():
 # import cProfile
 # cProfile.run("main()")
 
-main()
+if __name__ == '__main__':
+    main()
+
