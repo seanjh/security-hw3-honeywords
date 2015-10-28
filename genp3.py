@@ -29,7 +29,7 @@ def db_count(rockyou):
 
 
 
-def generate_sweetwords(num, password, rockyou, num_elements, random_word_prob=0.0):
+def generate_sweetwords(num, rockyou, num_elements, password, random_word_prob=0.0):
     sweetwords = [password]  # initiate the honeywords with the sweetwords
 
     while len(sweetwords) < mod_count(num):
@@ -65,7 +65,7 @@ def choose_rockyou(rockyou, r):
 
 
 def generate_sweetword_sets(num, passwords, rockyou, num_elements):
-    return [generate_sweetwords(num, p.strip(), rockyou, num_elements)
+    return [generate_sweetwords(num, rockyou, num_elements, p.strip())
             for p in passwords]
 
 
