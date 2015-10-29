@@ -2,7 +2,15 @@ import sys
 import csv
 import math
 import random
+import string
+import numpy as np
 from genword import generate_seed, select_tweak_func, tweak_tail
+
+ROCKYOU_FULL_FILENAME = 'rockyou-withcount.txt'
+
+# Indices for the tuples parsed from each line of the rockyou-withcount file
+USES_INDEX = 0
+PASSWORD_INDEX = 1
 
 
 def parse_args():
@@ -63,3 +71,31 @@ def generate_tweaks(num, seeds):
             generate_tweak(seed, tweaks)
     random.shuffle(tweaks)
     return tweaks
+
+
+def load_rockyou_passwords(limit=None, filename=ROCKYOU_FULL_FILENAME):
+    with open(ROCKYOU_FULL_FILENAME, 'r') as infile:
+        rockyou = []
+        for i, line in enumerate(infile):
+            val = tuple(line.split())
+            try:
+                val[USES_INDEX]
+                val[PASSWORD_INDEX]
+                rockyou.append(val)
+            except IndexError as e:
+                # all spaces
+                pass
+            if limit and (i + 1) >= limit:
+                break
+
+    uses = np.array([password[USES_INDEX] for password in rockyou],
+                    dtype=np.uint32)
+    total_uses = uses.sum()
+    passwords = [password[PASSWORD_INDEX] for password in rockyou]
+    weights = np.array(uses, dtype=np.float32)
+    weights /= total_uses
+    return uses, weights, passwords, total_uses
+
+
+def choose_rockyou(passwords, weights, num=1):
+    return np.random.choice(passwords, num, p=weights)
