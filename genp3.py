@@ -19,7 +19,8 @@ def generate_sweetwords(num_sweetwords, known_passwords, pass_weights,
     sweetwords = [real_password]  # initiate the honeywords with the sweetwords
 
     num_seeds = mod_count(num_sweetwords)
-    rockyou_seeds = choose_rockyou(known_passwords, pass_weights, num=num_seeds).tolist()
+    if not prepared_seeds:
+        rockyou_seeds = choose_rockyou(known_passwords, pass_weights, num=num_seeds).tolist()
     while len(sweetwords) < num_seeds:
         r = random.random()
         # generate a new word using 1 of 3 methods
@@ -31,7 +32,7 @@ def generate_sweetwords(num_sweetwords, known_passwords, pass_weights,
             if prepared_seeds:
                 new_word = prepared_seeds.pop()
             else:
-                new_word = choose_rockyou(known_passwords, pass_weights, num=1)[0]
+                new_word = rockyou_seeds.pop()
 
         if new_word not in sweetwords:
             # add the generated word
