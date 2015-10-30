@@ -19,6 +19,7 @@ def generate_sweetwords(num_sweetwords, known_passwords, pass_weights,
     sweetwords = [real_password]  # initiate the honeywords with the sweetwords
 
     num_seeds = mod_count(num_sweetwords)
+    rockyou_seeds = choose_rockyou(known_passwords, pass_weights, num=num_seeds).tolist()
     while len(sweetwords) < num_seeds:
         r = random.random()
         # generate a new word using 1 of 3 methods
