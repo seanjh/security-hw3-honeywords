@@ -14,6 +14,7 @@ PROBLEM_NUM = 3
 
 def generate_sweetwords(num_sweetwords, known_passwords, pass_weights,
                         real_password, random_word_prob=RANDOM_WORD_PROBABILITY,
+                        prepared_seeds=None,
                         tough_nut_prob=TOUGH_NUT_PROBABILITY):
     sweetwords = [real_password]  # initiate the honeywords with the sweetwords
 
@@ -26,7 +27,10 @@ def generate_sweetwords(num_sweetwords, known_passwords, pass_weights,
         if r < random_word_prob:
             new_word = generate_word()
         else:
-            new_word = choose_rockyou(known_passwords, pass_weights, num=1)[0]
+            if prepared_seeds:
+                new_word = prepared_seeds.pop()
+            else:
+                new_word = choose_rockyou(known_passwords, pass_weights, num=1)[0]
 
         if new_word not in sweetwords:
             # add the generated word

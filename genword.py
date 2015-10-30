@@ -311,7 +311,7 @@ def can_tweak_tail(password):
 
 
 def tweak_tail(password):
-    tweak_chars = randrange(1, len(password))
+    tweak_chars = randrange(0, len(password))
     new_password = [c for c in password]
     for i in range(tweak_chars, -1, -1):
         pos = len(password) - 1 - i
